@@ -3,6 +3,7 @@ package com.example.aneesh.contactsapp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 
 import android.os.Bundle;
@@ -16,6 +17,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
+
+//import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -76,27 +80,32 @@ public class PortraitContactDetails extends Fragment {
     }
 
     public void saveButtonClick(View view) {
-        Contact contact = new Contact(name.getText().toString(), phoneNumber.getText().toString());
+        if(!name.getText().toString().equals("") && !phoneNumber.getText().toString().equals("") ){
+            Contact contact = new Contact(name.getText().toString(), phoneNumber.getText().toString());
 
-        for(int i = 0; i < contacts.size(); i++){
-            if(contacts.get(i).isRelationBool()){
-                System.out.println(i);
-                contact.addRelationship(contacts.get(i));
-                contacts.get(i).addRelationship(contact);
+            for(int i = 0; i < contacts.size(); i++){
+                if(contacts.get(i).isRelationBool()){
+                    System.out.println(i);
+                    contact.addRelationship(contacts.get(i));
+
+                    contacts.get(i).addRelationship(contact);
+                }
+            }
+            contacts.add(contact);
+
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+                Intent intent = new Intent();
+                intent.putExtra("contacts", contacts);
+                getActivity().setResult(Activity.RESULT_OK, intent);
+                getActivity().finish();
+            }
+            else{
+                MainActivity m = (MainActivity)getActivity();
+                m.detailsFragDataPass(contacts);
             }
         }
-        contacts.add(contact);
+        Toast.makeText(getActivity(), "Please add both name and phone number", Toast.LENGTH_SHORT).show();
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            Intent intent = new Intent();
-            intent.putExtra("contacts", contacts);
-            getActivity().setResult(Activity.RESULT_OK, intent);
-            getActivity().finish();
-        }
-        else{
-            MainActivity m = (MainActivity)getActivity();
-            m.detailsFragDataPass(contacts);
-        }
     }
 
     @Override
@@ -106,4 +115,5 @@ public class PortraitContactDetails extends Fragment {
         //p.viewChange(contacts);
         outState.putSerializable("contacts", contacts);
     }
+
 }

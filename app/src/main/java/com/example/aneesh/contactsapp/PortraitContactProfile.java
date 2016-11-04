@@ -1,12 +1,14 @@
 package com.example.aneesh.contactsapp;
 
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -21,7 +23,7 @@ import java.util.ArrayList;
 public class PortraitContactProfile extends Fragment {
 
 
-    public ArrayList<Contact> relation;
+    public ArrayList<Contact> relation, contacts;
     public TextView contactName;
     public TextView contactNumber;
     public ListView relationship;
@@ -29,7 +31,7 @@ public class PortraitContactProfile extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_portrait_contact_profile, container, false);
 
@@ -39,6 +41,7 @@ public class PortraitContactProfile extends Fragment {
 
 
         contact = (Contact) getActivity().getIntent().getSerializableExtra("contacts");
+        contacts = (ArrayList<Contact>)getActivity().getIntent().getSerializableExtra("contactList");
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT && contact != null){
 
             contactName.setText(contact.getName());
@@ -51,6 +54,20 @@ public class PortraitContactProfile extends Fragment {
             }
             populateSimpleList(relationArray);
         }
+
+
+
+        relationship.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+                    Intent intent = new Intent(getActivity(), ContactProfile.class);
+                    intent.putExtra("contacts", contacts.get(position));
+                    intent.putExtra("contactList", contacts);
+                    startActivity(intent);
+                }
+            }
+        });
 
         return view;
     }
@@ -67,6 +84,7 @@ public class PortraitContactProfile extends Fragment {
         for(int i = 0; i < relation.size(); i++){
             relationArray.add(relation.get(i).getName());
         }
+
         populateSimpleList(relationArray);
     }
 
@@ -80,6 +98,7 @@ public class PortraitContactProfile extends Fragment {
 
         relationship.setAdapter(simpleAdapter);
     }
+
 
 
 }

@@ -24,9 +24,6 @@ public class ContactDetails extends AppCompatActivity {
 
             Intent intent = new Intent();
 
-            //intent.putExtra("name", name.getText().toString());
-            //intent.putExtra("number", phone.getText().toString());
-            //intent.putExtra("contacts", contacts);
             setResult(Activity.RESULT_OK, intent);
             finish();
             return;
@@ -39,4 +36,5 @@ public class ContactDetails extends AppCompatActivity {
         contacts = c;
 
     }
+
 }

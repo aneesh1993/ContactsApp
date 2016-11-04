@@ -3,6 +3,7 @@ package com.example.aneesh.contactsapp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +19,10 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+//import com.google.gson.Gson;
+//import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.zip.Inflater;
 
@@ -28,6 +33,7 @@ public class PortraitMain extends Fragment {
 
     private static final int REQ_CODE_CONTACT_DETAILS = 1234;
     private static final int REQ_CODE_CONTACT_PROFILE = 4321;
+    public static final String MY_PREFS = "my_prefs";
 
 
     public ArrayList<Contact> contacts = new ArrayList<>();
@@ -59,35 +65,20 @@ public class PortraitMain extends Fragment {
         //return super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_portrait_main, container, false);
         listView = (ListView)view.findViewById(R.id.contactListView);
-        ////////////////////////////////////////// Testing Purpose ///////////////////////////////
-
-        Contact contact1 = new Contact("Aneesh1", "(848) 237 9926");
-        Contact contact2 = new Contact("Aneesh2", "(848) 237 9927");
-        Contact contact3 = new Contact("Aneesh3", "(848) 237 9928");
 
 
-        if (savedInstanceState == null){
-            contacts.add(contact1);
-            contacts.add(contact2);
-            contacts.add(contact3);
-            populateList(contacts);
-        }
-        else {
+        if(savedInstanceState != null) {
             contacts = (ArrayList<Contact>)savedInstanceState.getSerializable("contactArrayList");
-            System.out.println(contacts.get(0).getName());
+            //System.out.println(contacts.get(0).getName());
             if(contacts != null)
                 populateList(contacts);
         }
-
 
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             MainActivity m = (MainActivity) getActivity();
             m.arrayListInit(contacts);
         }
-
-
-        //////////////////////////////////////////////////////////////////////////////////////////
 
         //////////////////////////////// addButton Click Listener ////////////////////////////////
         final Button addButton = (Button)view.findViewById(R.id.addButton);
@@ -115,6 +106,7 @@ public class PortraitMain extends Fragment {
                 if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
                     Intent intent = new Intent(getActivity(), ContactProfile.class);
                     intent.putExtra("contacts", contacts.get(position));
+                    intent.putExtra("contactList", contacts);
                     startActivity(intent);
                 }
                 else{
@@ -160,9 +152,6 @@ public class PortraitMain extends Fragment {
 
         }
 
-        if(requestCode == REQ_CODE_CONTACT_PROFILE && resultCode == Activity.RESULT_OK){
-
-        }
     }
 
     public void deleteButtonClick(View view){
@@ -172,8 +161,9 @@ public class PortraitMain extends Fragment {
             if(contacts.get(i).isSelected()){
                 ArrayList<Contact> rel = contacts.get(i).getRelationship();
                 for(int j = 0; j < rel.size(); j++){
+                    System.out.println("Index of rels to remove");
                     System.out.println(rel.get(j).getRelationship().indexOf(contacts.get(i)));
-                    rel.get(j).getRelationship().remove(rel.get(j).getRelationship().indexOf(contacts.get(i)));
+                    rel.get(j).getRelationship().remove(0);
                 }
                 contacts.remove(i);
             }
@@ -194,4 +184,6 @@ public class PortraitMain extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putSerializable("contactArrayList", contacts);
     }
+
+
 }

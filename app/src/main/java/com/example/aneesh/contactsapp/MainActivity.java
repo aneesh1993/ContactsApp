@@ -1,6 +1,5 @@
 package com.example.aneesh.contactsapp;
 
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -18,6 +17,7 @@ public class MainActivity extends AppCompatActivity implements PortraitMain.Left
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             /*

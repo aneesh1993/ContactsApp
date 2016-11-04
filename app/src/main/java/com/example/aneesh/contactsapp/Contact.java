@@ -15,6 +15,7 @@ public class Contact implements Serializable {
     String contactNumber = null;
     ArrayList<Contact> relationship = new ArrayList<>();
 
+
     public Contact(String name, String contactNumber){
         super();
         this.name = name;
@@ -60,4 +61,7 @@ public class Contact implements Serializable {
     public ArrayList<Contact> getRelationship(){
         return relationship;
     }
+
+
+
 }
